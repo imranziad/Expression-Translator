@@ -23,6 +23,7 @@ string remove_whitespace(string s) {
 }
 
 void match(char ch) {
+    if(ch != look_ahead) return ;
     look_ahead_idx++;
     if(look_ahead_idx < str.size())
         look_ahead = str[ look_ahead_idx ];
@@ -30,7 +31,7 @@ void match(char ch) {
         look_ahead = '\0';
 }
 
-void term() {
+void digit() {
     if(look_ahead >= '0' && look_ahead <= '9') {
         cout << look_ahead;
         match(look_ahead);
@@ -40,16 +41,38 @@ void term() {
     }
 }
 
+void f_rest() {
+    if(look_ahead == '*') {
+        match('*');
+        digit();
+        cout << "*";
+        f_rest();
+    }
+    else if(look_ahead == '/') {
+        match('/');
+        digit();
+        cout << "/";
+        f_rest();
+    }
+    else {  }
+}
+
+void factor() {
+    digit();
+    f_rest();
+    // brackets coming soon
+}
+
 void rest() {
     if(look_ahead == '+') {
         match('+');
-        term();
+        factor();
         cout << "+";
         rest();
     }
     else if(look_ahead == '-') {
         match('-');
-        term();
+        factor();
         cout << "-";
         rest();
     }
@@ -57,7 +80,7 @@ void rest() {
 }
 
 void expr() {
-    term();
+    factor();
     rest();
 }
 
@@ -85,3 +108,10 @@ int main() {
 
     return 0;
 }
+
+/*
+TEST INPUT:
+
+3*8- 5/6 +7*6/3
+
+*/
