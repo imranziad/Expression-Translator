@@ -4,7 +4,9 @@ using namespace std;
 
 string str;
 char look_ahead;
-int look_ahead_idx;
+int look_ahead_idx, level;
+
+void expr();
 
 string remove_whitespace(string s) {
     /*
@@ -31,9 +33,18 @@ void match(char ch) {
         look_ahead = '\0';
 }
 
-void digit() {
+void factor() {
     if(look_ahead >= '0' && look_ahead <= '9') {
         cout << look_ahead;
+        match(look_ahead);
+    }
+    else if(look_ahead == '(') {
+        match(look_ahead);
+        int pre_level = level;
+        level++;
+        expr();
+        if(look_ahead == ')' && level-1 == pre_level) level--;
+        else cout << "\nSyntax Error!" << endl;
         match(look_ahead);
     }
     else {
@@ -41,38 +52,37 @@ void digit() {
     }
 }
 
-void f_rest() {
+void factor_rest() {
     if(look_ahead == '*') {
         match('*');
-        digit();
+        factor();
         cout << "*";
-        f_rest();
+        factor_rest();
     }
     else if(look_ahead == '/') {
         match('/');
-        digit();
+        factor();
         cout << "/";
-        f_rest();
+        factor_rest();
     }
     else {  }
 }
 
-void factor() {
-    digit();
-    f_rest();
-    // brackets coming soon
+void term() {
+    factor();
+    factor_rest();
 }
 
 void rest() {
     if(look_ahead == '+') {
         match('+');
-        factor();
+        term();
         cout << "+";
         rest();
     }
     else if(look_ahead == '-') {
         match('-');
-        factor();
+        term();
         cout << "-";
         rest();
     }
@@ -80,11 +90,12 @@ void rest() {
 }
 
 void expr() {
-    factor();
+    term();
     rest();
 }
 
 void infix_to_postfix() {
+    level = 0;
     look_ahead_idx = 0;
     look_ahead = str[0];
     cout << "Postfix: ";
@@ -93,7 +104,7 @@ void infix_to_postfix() {
 }
 
 int main() {
-    //freopen("input.txt","r",stdin);
+    freopen("input.txt","r",stdin);
     //freopen("output.txt","w",stdout);
     string s;
 

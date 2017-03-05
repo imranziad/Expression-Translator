@@ -1,0 +1,8 @@
+expr -> term rest
+term -> factor factor_rest
+rest -> + factor print(+) rest
+        - factor print(-) rest
+factor_rest ->  * factor print(*) factor_rest
+                / factor print(*) factor_rest
+factor -> digit | (expr)
+digit -> 0|1|2|.....|9 print digit
