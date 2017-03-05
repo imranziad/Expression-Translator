@@ -53,19 +53,19 @@ void factor() {
 }
 
 void factor_rest() {
-    if(look_ahead == '*') {
-        match('*');
-        factor();
-        cout << "*";
-        factor_rest();
+    while(true) {
+        if(look_ahead == '*') {
+            match('*');
+            factor();
+            cout << "*";
+        }
+        else if(look_ahead == '/') {
+            match('/');
+            factor();
+            cout << "/";
+        }
+        else break;
     }
-    else if(look_ahead == '/') {
-        match('/');
-        factor();
-        cout << "/";
-        factor_rest();
-    }
-    else {  }
 }
 
 void term() {
@@ -74,19 +74,19 @@ void term() {
 }
 
 void rest() {
-    if(look_ahead == '+') {
-        match('+');
-        term();
-        cout << "+";
-        rest();
+    while(true) {
+        if(look_ahead == '+') {
+            match('+');
+            term();
+            cout << "+";
+        }
+        else if(look_ahead == '-') {
+            match('-');
+            term();
+            cout << "-";
+        }
+        else break;
     }
-    else if(look_ahead == '-') {
-        match('-');
-        term();
-        cout << "-";
-        rest();
-    }
-    else {  }
 }
 
 void expr() {
@@ -100,11 +100,13 @@ void infix_to_postfix() {
     look_ahead = str[0];
     cout << "Postfix: ";
     expr();
+    if(look_ahead_idx < str.size())
+        cout << "\nSyntax Error!" << endl;
     cout << endl;
 }
 
 int main() {
-    freopen("input.txt","r",stdin);
+    //freopen("input.txt","r",stdin);
     //freopen("output.txt","w",stdout);
     string s;
 
