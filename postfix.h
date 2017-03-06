@@ -8,19 +8,23 @@
     accepted characters:
     0-9, (), +, -, *, /
 
-    No support for int >= 10
+    to support int >= 10, modify match()
+    and factor digit check() accordingly.
 **/
 
 class Postfix {
     string str, postfix;
     char lookahead; /*next char to read*/
     int lookahead_idx, level;
+    int idx;
+    double value;
     bool error_flag;
 
 public:
     Postfix(string s) {
         /*the postfix will be stored in this*/
         postfix = "";
+        value = 0.0;
         if(s.empty()) goto print;
 
         str = s;
@@ -40,12 +44,16 @@ public:
         if(lookahead_idx < str.size())
             error_flag = true;
 
+        idx = (int)(postfix.size())-1;
         /* Syntax error has occurred, no valid postfix */
         if(error_flag)
             postfix = "Syntax Error!";
+        else
+            value = calculate_value(idx);
 
         print:
         cout << "Postfix: " << postfix << endl;
+        cout << setprecision(3) << "  Value: " << value << endl;
     }
 
 private:
@@ -137,5 +145,24 @@ private:
             error_flag = true;
             cout << "Postfix Error: index " << lookahead_idx << ": invalid character" << endl;
         }
+    }
+    /*  calculate the value from the postfix
+        this technique uses depth first search
+    */
+    double calculate_value(int &pos) {
+        if(pos < 0) return 0.0;
+        //if(pos == 0) return (int)(s[pos]-'0');
+        if(postfix[pos] >= '0' && postfix[pos] <= '9') {
+            double num = (int)(postfix[pos]-'0');
+            pos--;
+            return num;
+        }
+        char ch = postfix[pos]; --pos;
+        double x = calculate_value(pos);
+        double y = calculate_value(pos);
+        if(ch == '+') return y+x;
+        if(ch == '-') return y-x;
+        if(ch == '*') return y*x;
+        return y/x; // it's definitely '/'
     }
 };

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cstdio>
+#include <iomanip>
+#include <algorithm>
 using namespace std;
 /**
     custom headers are included
@@ -30,9 +32,12 @@ int main() {
     //freopen("output.txt","w",stdout);
     string s, str;
 
+    cout << "--- Infix to Postfix | Infix to Prefix ---" << endl;
+    cout << "---------Type \"exit\" to finish----------" << endl << endl;
+
     /* take input until "exit" command */
     while(true) {
-        // cout << "Enter Infix expression: ";
+        cout << "Enter Infix expression: ";
         getline(cin, s);
         if(s == "exit") break;
 

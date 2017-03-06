@@ -1,4 +1,3 @@
-#include <algorithm>
 /**
     Contains Prefix class,
     that takes a string in constructor
@@ -9,19 +8,24 @@
     accepted characters:
     0-9, (), +, -, *, /
 
-    No support for int >= 10
+    to support int >= 10, modify match()
+    and factor digit check() accordingly.
 **/
 
 class Prefix {
     string str, prefix;
     char lookahead; /*next char to read*/
     int lookahead_idx, level;
+    int idx;
+    double value;
     bool error_flag;
 
 public:
     Prefix(string s) {
         /*the prefix will be stored in this*/
         prefix = "";
+        value = 0.0;
+        idx = 0;
         if(s.empty()) goto print;
 
         str = s;
@@ -44,11 +48,14 @@ public:
         /* Syntax error has occurred, no valid prefix */
         if(error_flag)
             prefix = "Syntax Error!";
-        else
+        else {
             reverse(prefix.begin(),prefix.end());
+            value = calculate_value(idx);
+        }
 
         print:
         cout << "Prefix: " << prefix << endl;
+        cout << setprecision(3) << "  Value: " << value << endl;
     }
 
 private:
@@ -140,5 +147,24 @@ private:
             error_flag = true;
             cout << "Prefix Error: index " << lookahead_idx << ": invalid character" << endl;
         }
+    }
+    /*  calculate the value from the prefix
+        this technique uses depth first search
+    */
+    double calculate_value(int &pos) {
+        if(pos >= (int)prefix.size()) return 0.0;
+        //if(pos == 0) return (int)(s[pos]-'0');
+        if(prefix[pos] >= '0' && prefix[pos] <= '9') {
+            double num = (int)(prefix[pos]-'0');
+            pos++;
+            return num;
+        }
+        char ch = prefix[pos]; ++pos;
+        double x = calculate_value(pos);
+        double y = calculate_value(pos);
+        if(ch == '+') return x+y;
+        if(ch == '-') return x-y;
+        if(ch == '*') return x*y;
+        return x/y; // it's definitely '/'
     }
 };
