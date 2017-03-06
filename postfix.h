@@ -4,7 +4,8 @@
     that takes a string in constructor
     and performs the infix to postfix
     translation if the string is a valid
-    infix expression.
+    infix expression otherwise shows
+    syntax error.
 **/
 
 class Postfix {
@@ -25,6 +26,7 @@ public:
         cout << endl;
     }
 
+private:
     void match(char ch) {
         if(ch != look_ahead) return ;
         look_ahead_idx++;

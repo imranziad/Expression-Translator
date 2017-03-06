@@ -5,10 +5,10 @@ using namespace std;
 /**
     custom headers are included
     after namespace to avoid repetition
-    in other files.
+    in those files.
 */
-
 #include "postfix.h"
+#include "prefix.h"
 
 string str;
 char look_ahead;
@@ -31,7 +31,7 @@ string remove_whitespace(string s) {
 }
 
 int main() {
-    freopen("input.txt","r",stdin);
+    //freopen("input.txt","r",stdin);
     //freopen("output.txt","w",stdout);
     string s;
 
@@ -43,6 +43,7 @@ int main() {
     cout << "whitespace removed: " << str << endl;
 
     Postfix pf(str);
+    Prefix prf(str);
 
     return 0;
 }
