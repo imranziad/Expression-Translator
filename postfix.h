@@ -147,7 +147,7 @@ private:
         }
     }
     /*  calculate the value from the postfix
-        this technique uses depth first search
+        this function uses depth first search
     */
     double calculate_value(int &pos) {
         if(pos < 0) return 0.0;

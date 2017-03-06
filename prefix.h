@@ -149,7 +149,7 @@ private:
         }
     }
     /*  calculate the value from the prefix
-        this technique uses depth first search
+        this function uses depth first search
     */
     double calculate_value(int &pos) {
         if(pos >= (int)prefix.size()) return 0.0;
