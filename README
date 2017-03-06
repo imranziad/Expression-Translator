@@ -37,5 +37,5 @@ factor_rest ->  * factor factor_rest print(*)
 factor -> digit | (expr)
 digit -> 0|1|2|.....|9 print digit
 
-Note: print the reverse order of the output
+Note: print the reverse order of the prefix string
 
