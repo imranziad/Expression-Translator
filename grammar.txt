@@ -1,3 +1,5 @@
+Infix to Postfix:
+
 expr -> term rest
 term -> factor factor_rest
 rest -> + factor print(+) rest
@@ -6,3 +8,18 @@ factor_rest ->  * factor print(*) factor_rest
                 / factor print(*) factor_rest
 factor -> digit | (expr)
 digit -> 0|1|2|.....|9 print digit
+
+--------------------------------------
+
+Infix to Prefix:
+
+expr -> term rest
+term -> factor factor_rest
+rest -> + factor rest print(+)
+        - factor rest print(-)
+factor_rest ->  * factor factor_rest print(*)
+                / factor factor_rest print(*)
+factor -> digit | (expr)
+digit -> 0|1|2|.....|9 print digit
+
+Note: print the reverse order of the output
