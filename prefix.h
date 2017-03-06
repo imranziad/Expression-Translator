@@ -6,101 +6,139 @@
     translation if the string is a valid
     infix expression otherwise shows
     syntax error.
+    accepted characters:
+    0-9, (), +, -, *, /
+
+    No support for int >= 10
 **/
 
 class Prefix {
-    string str, pfx = "";
-    char look_ahead;
-    int look_ahead_idx, level;
+    string str, prefix;
+    char lookahead; /*next char to read*/
+    int lookahead_idx, level;
     bool error_flag;
 
 public:
     Prefix(string s) {
-        // check empty string
+        /*the prefix will be stored in this*/
+        prefix = "";
+        if(s.empty()) goto print;
+
         str = s;
-        level = 0;
-        look_ahead_idx = (int)(str.size())-1;
-        look_ahead = str[(int)(str.size())-1];
         error_flag = false;
+        /* level starts from the root 0,
+            details in factor() function */
+        level = 0;
+        /*first character to read*/
+        lookahead_idx = (int)(str.size())-1;
+        lookahead = str[(int)(str.size())-1];
+
         expr();
-        if(look_ahead_idx < str.size())
+
+        /* if the string isn't finished,
+            something wrong happened and
+            the string is invalid */
+        if(lookahead_idx >= 0)
             error_flag = true;
+
+        /* Syntax error has occurred, no valid prefix */
         if(error_flag)
-            pfx = "Syntax Error!";
+            prefix = "Syntax Error!";
         else
-            reverse(pfx.begin(),pfx.end());
-        cout << "Prefix: " << pfx << endl;
+            reverse(prefix.begin(),prefix.end());
+
+        print:
+        cout << "Prefix: " << prefix << endl;
     }
 
 private:
+    /* expr -> term rest */
     void expr() {
         term();
         rest();
     }
-
+    /* term -> factor factor_rest */
     void term() {
         factor();
         factor_rest();
     }
-
+    /*  rest -> + term rest
+        rest -> - term rest */
     void rest() {
-        if(look_ahead == '+') {
+        if(lookahead == '+') {
             match('+');
             term();
             rest();
-            pfx += "+";
+            prefix += "+";
         }
-        else if(look_ahead == '-') {
+        else if(lookahead == '-') {
             match('-');
             term();
             rest();
-            pfx += "-";
+            prefix += "-";
         }
         else {}
     }
-
+    /* factor_rest -> * factor factor_rest
+       factor_rest -> / factor factor_rest */
     void factor_rest() {
-        if(look_ahead == '*') {
+        if(lookahead == '*') {
             match('*');
             factor();
             factor_rest();
-            pfx += "*";
+            prefix += "*";
         }
-        else if(look_ahead == '/') {
+        else if(lookahead == '/') {
             match('/');
             factor();
             factor_rest();
-            pfx += "/";
+            prefix += "/";
         }
         else {}
     }
+    /* matches the character with current
+        lookahead and points it to the next
+        character to read */
+    void match(char ch) {
+        /*if ch is not matched return*/
+        if(ch != lookahead) return ;
+        lookahead_idx--;
+        /* check if the string is finished */
+        if(lookahead_idx >= 0)
+            lookahead = str[ lookahead_idx ];
+        else
+            lookahead = '\0';
+    }
 
+    /* factor -> 0|1|2|....|9| (expr) */
     void factor() {
-        if(look_ahead >= '0' && look_ahead <= '9') {
-            pfx += look_ahead;
-            match(look_ahead);
+        if(lookahead >= '0' && lookahead <= '9') {
+            // current character is a digit
+            prefix += lookahead;
+            // point next character
+            match(lookahead);
         }
-        else if(look_ahead == ')') {
-            match(look_ahead);
+        else if(lookahead == ')') {
+            /* current character is (,
+            should be like (expr),
+            create a new level */
+            match(lookahead);
             int pre_level = level;
             level++;
             expr();
-            if(look_ahead == '(' && level-1 == pre_level) level--;
-            else error_flag = true;
-            match(look_ahead);
+            /* next character is closing ')' and it
+            returns to it's original level */
+            if(lookahead == '(' && level-1 == pre_level)
+                level--;
+            else {
+                error_flag = true;
+                cout << "Prefix Error: index " << lookahead_idx << ": expected '(' character" << endl;
+            }
+            match(lookahead);
         }
         else {
             error_flag = true;
+            cout << "Prefix Error: index " << lookahead_idx << ": invalid character" << endl;
         }
     }
-
-    void match(char ch) {
-        if(ch != look_ahead) return ;
-        look_ahead_idx--;
-        if(look_ahead_idx >= 0)
-            look_ahead = str[ look_ahead_idx ];
-        else
-            look_ahead = '\0';
-    }
 };
-

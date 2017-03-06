@@ -26,7 +26,7 @@ string remove_whitespace(string s) {
 }
 
 int main() {
-    freopen("input.txt","r",stdin);
+    //freopen("input.txt","r",stdin);
     //freopen("output.txt","w",stdout);
     string s, str;
 
