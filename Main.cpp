@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdio>
 using namespace std;
-
 /**
     custom headers are included
     after namespace to avoid repetition
@@ -9,10 +8,6 @@ using namespace std;
 */
 #include "postfix.h"
 #include "prefix.h"
-
-string str;
-char look_ahead;
-int look_ahead_idx, level;
 
 string remove_whitespace(string s) {
     /*
@@ -31,26 +26,28 @@ string remove_whitespace(string s) {
 }
 
 int main() {
-    //freopen("input.txt","r",stdin);
+    freopen("input.txt","r",stdin);
     //freopen("output.txt","w",stdout);
-    string s;
+    string s, str;
 
-    getline(cin, s);
+    /* take input until "exit" command */
+    while(true) {
+        // cout << "Enter Infix expression: ";
+        getline(cin, s);
+        if(s == "exit") break;
 
-    str = remove_whitespace(s);
+        str = remove_whitespace(s);
 
-    cout << "input: " << s << endl;
-    cout << "whitespace removed: " << str << endl;
+        cout << "input: " << s << endl;
+        cout << "infix: " << str << endl;
 
-    Postfix pf(str);
-    Prefix prf(str);
+        // generate and print the postfix
+        Postfix pf(str);
+        // generate and print the prefix
+        Prefix prf(str);
+
+        cout << endl;
+    }
 
     return 0;
 }
-
-/*
-TEST INPUT:
-
-3*8- 5/6 +7*6/3
-
-*/
