@@ -4,6 +4,13 @@ Expression Translator:
 
 [As a classwork of Compiler Design Course - Spring 2017]
 
+Constraints:
+    1) Each number should be a digit between 0-9.
+    2) Only addition(+), subtraction(-), multiplication(*) and division(/) is allowed.
+    3) Parenthesis of this form "()" is allowed.
+    4) An operator is required between "()" and another operand
+    5) Spaces in input will be removed.
+
 Details of Production:
 
 Infix to Postfix:
