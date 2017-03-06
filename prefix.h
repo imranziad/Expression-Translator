@@ -33,48 +33,9 @@ public:
     }
 
 private:
-    void match(char ch) {
-        if(ch != look_ahead) return ;
-        look_ahead_idx--;
-        if(look_ahead_idx >= 0)
-            look_ahead = str[ look_ahead_idx ];
-        else
-            look_ahead = '\0';
-    }
-
-    void factor() {
-        if(look_ahead >= '0' && look_ahead <= '9') {
-            pfx += look_ahead;
-            match(look_ahead);
-        }
-        else if(look_ahead == ')') {
-            match(look_ahead);
-            int pre_level = level;
-            level++;
-            expr();
-            if(look_ahead == '(' && level-1 == pre_level) level--;
-            else error_flag = true;
-            match(look_ahead);
-        }
-        else {
-            error_flag = true;
-        }
-    }
-
-    void factor_rest() {
-        if(look_ahead == '*') {
-            match('*');
-            factor();
-            factor_rest();
-            pfx += "*";
-        }
-        else if(look_ahead == '/') {
-            match('/');
-            factor();
-            factor_rest();
-            pfx += "/";
-        }
-        else {}
+    void expr() {
+        term();
+        rest();
     }
 
     void term() {
@@ -98,9 +59,48 @@ private:
         else {}
     }
 
-    void expr() {
-        term();
-        rest();
+    void factor_rest() {
+        if(look_ahead == '*') {
+            match('*');
+            factor();
+            factor_rest();
+            pfx += "*";
+        }
+        else if(look_ahead == '/') {
+            match('/');
+            factor();
+            factor_rest();
+            pfx += "/";
+        }
+        else {}
+    }
+
+    void factor() {
+        if(look_ahead >= '0' && look_ahead <= '9') {
+            pfx += look_ahead;
+            match(look_ahead);
+        }
+        else if(look_ahead == ')') {
+            match(look_ahead);
+            int pre_level = level;
+            level++;
+            expr();
+            if(look_ahead == '(' && level-1 == pre_level) level--;
+            else error_flag = true;
+            match(look_ahead);
+        }
+        else {
+            error_flag = true;
+        }
+    }
+
+    void match(char ch) {
+        if(ch != look_ahead) return ;
+        look_ahead_idx--;
+        if(look_ahead_idx >= 0)
+            look_ahead = str[ look_ahead_idx ];
+        else
+            look_ahead = '\0';
     }
 };
 
